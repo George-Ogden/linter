@@ -1,0 +1,34 @@
+default_stages: ["pre-commit"]
+default_install_hook_types: ["pre-commit", "commit-msg"]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+      - id: requirements-txt-fixer
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.3
+    hooks:
+      - id: ruff-format
+        exclude: ^test_samples
+      - id: ruff-check
+        args:
+          - --fix
+
+  - repo: https://github.com/George-Ogden/pre-commit-hooks
+    rev: v1.4.1
+    hooks:
+      - id: check-merge-conflict
+      - id: todo-check
+      - id: mypy
+        args: [-r, requirements-dev.txt]
+      - id: spell-check-commit-msgs
