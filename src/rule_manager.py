@@ -2,7 +2,7 @@ from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import KW_ONLY, dataclass
 import functools
-from typing import Any
+from typing import Any, Self
 
 import libcst as cst
 
@@ -36,3 +36,7 @@ class RuleManager(cst.CSTTransformer):
             for node_name in rule.node_names:
                 rule_groups[node_name].append(rule)
         return rule_groups
+
+    @classmethod
+    def from_rule_names(cls, *rule_names: str, fix: bool) -> Self:
+        return cls([Rule.rules[rule_name] for rule_name in rule_names], fix=fix)

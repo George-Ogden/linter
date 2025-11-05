@@ -8,8 +8,14 @@ import libcst as cst
 
 class Rule[NodeT: cst.BaseExpression, CheckT](abc.ABC):
     rules: Final[dict[str, Any]] = {}
-    rulename: ClassVar[str]
+    rule_name: ClassVar[str]
     node_names: ClassVar[tuple[str, ...]]
+
+    def __init_subclass__(cls, *args: Any, **kwargs: Any) -> None:
+        super().__init_subclass__(*args, **kwargs)
+        cls()
+        assert cls.rule_name not in cls.rules
+        cls.rules[cls.rule_name] = cls
 
     @classmethod
     @abc.abstractmethod

@@ -3,19 +3,12 @@ from unittest import mock
 
 import libcst as cst
 
-from .rule import Rule
 from .rule_manager import RuleManager
-
-
-class RuleMock[NodeT: cst.BaseExpression](Rule[NodeT, None]):
-    _mock: ClassVar[mock.MagicMock] = mock.MagicMock()
-
-    @classmethod
-    def fix(cls, info: None) -> None: ...
+from .test_utils import RuleMock
 
 
 class IntegerRuleMock(RuleMock[cst.Integer]):
-    rulename: ClassVar[str] = "integer-mock"
+    rule_name: ClassVar[str] = "integer-mock"
     node_names: ClassVar[tuple[str]] = ("Integer",)
 
     @classmethod
@@ -24,7 +17,7 @@ class IntegerRuleMock(RuleMock[cst.Integer]):
 
 
 class StringRuleMock(RuleMock[cst.SimpleString]):
-    rulename: ClassVar[str] = "string-mock"
+    rule_name: ClassVar[str] = "string-mock"
     node_names: ClassVar[tuple[str]] = ("SimpleString",)
     _mock: ClassVar[mock.MagicMock] = mock.MagicMock()
 
@@ -34,7 +27,7 @@ class StringRuleMock(RuleMock[cst.SimpleString]):
 
 
 class StringAndIntegerRuleMock(RuleMock[cst.Integer | cst.SimpleString]):
-    rulename: ClassVar[str] = "integer-string-mock"
+    rule_name: ClassVar[str] = "string-integer-mock"
     node_names: ClassVar[tuple[str, str]] = ("SimpleString", "Integer")
     _mock: ClassVar[mock.MagicMock] = mock.MagicMock()
 
@@ -101,3 +94,15 @@ def test_integer_rule_registers_multiple_correctly_and_runs_all_rules() -> None:
     im.assert_has_calls([mock.call(4, 4)])
     sm.assert_has_calls([mock.call("4", "4")])
     sim.assert_has_calls([mock.call(4, 4), mock.call("4", "4")])
+
+
+def test_rule_registration_one_rule() -> None:
+    rule_manager = RuleManager.from_rule_names("integer-mock", fix=False)
+    assert rule_manager.rules == [IntegerRuleMock]
+
+
+def test_rule_registration_many_rules() -> None:
+    rule_manager = RuleManager.from_rule_names(
+        "integer-mock", "string-mock", "string-integer-mock", fix=False
+    )
+    assert rule_manager.rules == [IntegerRuleMock, StringRuleMock, StringAndIntegerRuleMock]
