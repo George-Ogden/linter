@@ -10,6 +10,8 @@ from ..test_utils import check_rules_test_body
     [
         ("empty", []),
         ("errors", [(1, 5), (4, 5), (5, 5), (6, 21), (6, 5), (7, 5)]),
+        ("keywords", [(1, 10)]),
+        ("no_errors", []),
     ],
 )
 def test_check_string_keyed_dict(name: str, expected_positions: list[tuple[int, int]]) -> None:
