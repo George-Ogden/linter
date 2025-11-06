@@ -1,11 +1,11 @@
 from collections import defaultdict
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import KW_ONLY, dataclass
-import functools
-from typing import Any, Self
+from typing import Any
 
 import libcst as cst
 
+from .file_checker import FileChecker
 from .rule import Rule
 
 
@@ -14,18 +14,6 @@ class RuleManager(cst.CSTTransformer):
     rules: Sequence[type[Rule]]
     _: KW_ONLY
     fix: bool
-
-    def check_rule[NodeT: cst.BaseExpression](
-        self, original_node: NodeT, updated_node: NodeT, *, rules: Sequence[type[Rule[NodeT, Any]]]
-    ) -> cst.BaseExpression:
-        for rule in rules:
-            rule.check(original_node, updated_node)
-        return updated_node
-
-    def __post_init__(self) -> None:
-        rule_groups = self._group_rules_by_node_names(self.rules)
-        for node_name, rules in rule_groups.items():
-            setattr(self, f"leave_{node_name}", functools.partial(self.check_rule, rules=rules))
 
     @classmethod
     def _group_rules_by_node_names(
@@ -38,5 +26,30 @@ class RuleManager(cst.CSTTransformer):
         return rule_groups
 
     @classmethod
-    def from_rule_names(cls, *rule_names: str, fix: bool) -> Self:
-        return cls([Rule.rules[rule_name] for rule_name in rule_names], fix=fix)
+    def from_rule_names(cls, *rule_names: str, fix: bool) -> type[FileChecker]:
+        rules = [Rule.rules[rule_name] for rule_name in rule_names]
+        return cls.from_rules(rules, fix=fix)
+
+    @classmethod
+    def from_rules(cls, rules: Sequence[type[Rule]], *, fix: bool) -> type[FileChecker]:
+        return type(
+            f"{FileChecker.__name__}[{','.join(rule.rule_name for rule in rules)}]",
+            (FileChecker,),
+            dict(rules=rules, fix=fix, **cls._rule_methods(rules)),
+        )
+
+    @classmethod
+    def _rule_methods(cls, rules: Sequence[type[Rule]]) -> dict[str, Callable]:
+        rule_groups = cls._group_rules_by_node_names(rules)
+
+        return {
+            f"leave_{node_name}": cls._rule_closure(rules)
+            for node_name, rules in rule_groups.items()
+        }
+
+    @classmethod
+    def _rule_closure(cls, rules: Sequence[type[Rule]]) -> Callable:
+        def check_rules(self: FileChecker, *args: Any) -> Any:
+            return self.check_rules(*args, rules=rules)
+
+        return check_rules
