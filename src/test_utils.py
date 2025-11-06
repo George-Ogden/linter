@@ -1,6 +1,6 @@
 from collections.abc import Iterable
-import os.path
-from typing import ClassVar
+from pathlib import Path
+from typing import ClassVar, Final
 from unittest import mock
 
 import libcst as cst
@@ -8,6 +8,8 @@ import libcst as cst
 from .position import Position
 from .rule import Rule
 from .rule_manager import RuleManager
+
+TEST_DATA_DIR: Final[Path] = Path("test_data/")
 
 
 class RuleMock[NodeT: cst.BaseExpression](Rule[NodeT, None]):
@@ -27,7 +29,8 @@ def check_rules_test_body(
     rules: Iterable[str], filename: str, expected_positions: list[tuple[int, int]]
 ) -> None:
     file_checker = RuleManager.from_rule_names(*rules, fix=False)
-    filename = os.path.join("test_data/", filename)
-    violation_positions = [location.position for location, _ in file_checker.lint_file(filename)]
+    violation_positions = [
+        location.position for location, _ in file_checker.lint_file(str(TEST_DATA_DIR / filename))
+    ]
     expected = [Position(line, char) for line, char in expected_positions]
     assert violation_positions == expected
