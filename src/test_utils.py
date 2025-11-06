@@ -34,7 +34,7 @@ def check_rules_test_body(
     rules: Iterable[str], filename: str, expected_positions: list[tuple[int, int]]
 ) -> None:
     file_checker = RuleManager.from_rule_names(*rules, fix=False)
-    violations = file_checker.lint_file(str(TEST_DATA_DIR / filename))
+    violations = list(file_checker.lint_file(str(TEST_DATA_DIR / filename)))
     assert all(isinstance(violation, Violation) for violation in violations)
     violation_positions = [violation.location.position for violation in violations]
     expected = [Position(line, char) for line, char in expected_positions]
@@ -49,7 +49,7 @@ def fix_rules_test_body(rules: Iterable[str], filename: str, expected_filename: 
         rule_manager = RuleManager.from_rule_names(*rules, fix=True)
         violations = list(rule_manager.lint_file(str(temp_filepath)))
         assert all(isinstance(violation, Violation) for violation in violations)
-        assert all(not cast(Violation, violation).fixed for violation in violations)
+        assert all(cast(Violation, violation).fixed for violation in violations)
 
         with open(temp_filepath) as f:
             source = f.read()

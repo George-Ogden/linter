@@ -65,7 +65,9 @@ class FileChecker(cst.CSTTransformer):
 
     def violation_from_node(self, node: cst.BaseExpression) -> Violation:
         position = self.get_position(node)
-        return Violation(Location(self.filename, position), node, fixed=False)
+        return Violation(
+            Location(self.filename, position), self.module.code_for_node(node), fixed=False
+        )
 
     def get_position(self, node: cst.BaseExpression) -> None | Position:
         range: CodeRange | None = self.get_metadata(metadata.PositionProvider, node)

@@ -1,6 +1,5 @@
-from dataclasses import dataclass, field
-
-import libcst as cst
+from dataclasses import dataclass
+import textwrap
 
 from .position import Location
 
@@ -10,12 +9,26 @@ class Error:
     location: Location
     message: str
 
+    def format(self) -> str:
+        return f"{self.location.format()}: {self.message}"
+
 
 @dataclass
 class Violation:
     location: Location
-    node: cst.BaseExpression = field(repr=False)
+    code: str
     fixed: bool
 
     def fix(self) -> None:
         self.fixed = True
+
+    def format(self) -> str:
+        return f"{self.location.format()}: {self.format_code(self.code)}"
+
+    @classmethod
+    def format_code(cls, code: str) -> str:
+        first_line, *lines = code.split("\n", maxsplit=1)
+        if lines:
+            [line] = lines
+            return f"{first_line}\n{textwrap.dedent(line)}"
+        return first_line
