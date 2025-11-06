@@ -7,7 +7,7 @@ from typing import Any
 import git
 import pytest
 
-from src.test_utils import TEST_DATA_DIR
+from linter.test_utils import TEST_DATA_DIR
 
 TEST_ROOT = os.path.join(os.path.dirname(__file__), "integration_tests")
 

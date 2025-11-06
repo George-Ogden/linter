@@ -3,8 +3,8 @@ from collections.abc import Sequence
 import sys
 from typing import NoReturn
 
-from src.config import LinterConfig
-from src.rule import Rule
+from linter.config import LinterConfig
+from linter.rule import Rule
 
 
 def rule_names_from_csv(csv: str) -> list[str]:
