@@ -1,7 +1,7 @@
 import pytest
 
 from .fullset import fullset
-from .noqa_finder import NoqaFinder
+from .noqa_finder import IgnoredLines, NoqaFinder
 from .test_utils import TEST_DATA_DIR
 
 
@@ -65,7 +65,7 @@ def test_parse_comment(comment: str, expected_codes: list[str] | None) -> None:
         ),
     ],
 )
-def test_find_noqas(filename: str, expected: dict[int, fullset]) -> None:
+def test_find_noqas(filename: str, expected: IgnoredLines) -> None:
     with open(TEST_DATA_DIR / "noqa" / f"{filename}.py") as f:
         lines = f.readlines()
 

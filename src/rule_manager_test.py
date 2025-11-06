@@ -46,7 +46,10 @@ class StringAndIntegerRuleMock(RuleMock[cst.Integer | cst.SimpleString]):
 
 @pytest.fixture
 def mock_file() -> Any:
-    with mock.patch.object(FileChecker, "__post_init__") as m:
+    with (
+        mock.patch.object(FileChecker, "__post_init__") as m,
+        mock.patch.object(FileChecker, "get_metadata", return_value=None),
+    ):
         yield m
 
 

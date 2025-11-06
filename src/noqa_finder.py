@@ -7,10 +7,12 @@ from typing import cast
 
 from .fullset import fullset
 
+type IgnoredLines = dict[int, fullset[str]]
+
 
 class NoqaFinder:
     @classmethod
-    def parse_lines(cls, lines: Iterable[str]) -> dict[int, fullset[str]]:
+    def parse_lines(cls, lines: Iterable[str]) -> IgnoredLines:
         comments = cls.get_comments(lines)
         return {line: cls.parse_comment(comment) for line, comment in comments}
 

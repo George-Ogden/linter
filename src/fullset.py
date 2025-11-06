@@ -23,3 +23,6 @@ class fullset[T]:  # noqa: N801
 
     def __bool__(self) -> bool:
         return self._values is None or bool(self._values)
+
+    def __contains__(self, item: T, /) -> bool:
+        return self._values is None or item in self._values
