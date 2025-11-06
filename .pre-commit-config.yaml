@@ -30,5 +30,6 @@ repos:
       - id: check-merge-conflict
       - id: todo-check
       - id: mypy
+        exclude: ^test_data/
         args: [-r, requirements-dev.txt]
       - id: spell-check-commit-msgs

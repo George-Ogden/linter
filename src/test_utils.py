@@ -4,11 +4,12 @@ import os
 from pathlib import Path
 import shutil
 import tempfile
-from typing import ClassVar, Final
+from typing import ClassVar, Final, cast
 from unittest import mock
 
 import libcst as cst
 
+from .feedback import Violation
 from .position import Position
 from .rule import Rule
 from .rule_manager import RuleManager
@@ -34,10 +35,11 @@ def check_rules_test_body(
 ) -> None:
     file_checker = RuleManager.from_rule_names(*rules, fix=False)
     violations = file_checker.lint_file(str(TEST_DATA_DIR / filename))
+    assert all(isinstance(violation, Violation) for violation in violations)
     violation_positions = [violation.location.position for violation in violations]
     expected = [Position(line, char) for line, char in expected_positions]
     assert violation_positions == expected
-    assert all(not violation.fixed for violation in violations)
+    assert all(not cast(Violation, violation).fixed for violation in violations)
 
 
 def fix_rules_test_body(rules: Iterable[str], filename: str, expected_filename: str) -> None:
@@ -46,7 +48,8 @@ def fix_rules_test_body(rules: Iterable[str], filename: str, expected_filename: 
         shutil.copy2(TEST_DATA_DIR / filename, temp_filepath)
         rule_manager = RuleManager.from_rule_names(*rules, fix=True)
         violations = list(rule_manager.lint_file(str(temp_filepath)))
-        assert all(violation.fixed for violation in violations)
+        assert all(isinstance(violation, Violation) for violation in violations)
+        assert all(not cast(Violation, violation).fixed for violation in violations)
 
         with open(temp_filepath) as f:
             source = f.read()

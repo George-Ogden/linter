@@ -10,6 +10,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 line-length = 100
+exclude = ["test_data/general/syntax.py"]
 
 [tool.ruff.lint]
 extend-select = ["B", "E", "ERA", "F", "I", "N", "PT", "PYI", "RET", "RUF", "SIM", "UP", "W"]
@@ -36,3 +37,4 @@ disallow_incomplete_defs = true
 disallow_untyped_defs = true
 warn_unused_ignores = true
 strict_equality = true
+exclude = ["test_data/"]

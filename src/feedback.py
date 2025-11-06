@@ -6,6 +6,12 @@ from .position import Location
 
 
 @dataclass
+class Error:
+    location: Location
+    message: str
+
+
+@dataclass
 class Violation:
     location: Location
     node: cst.BaseExpression = field(repr=False)

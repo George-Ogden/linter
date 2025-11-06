@@ -7,10 +7,10 @@ import libcst as cst
 from libcst._position import CodeRange
 import libcst.metadata as metadata
 
+from .feedback import Error, Violation
 from .noqa_finder import IgnoredLines, NoqaFinder
 from .position import Location, Position
 from .rule import Rule
-from .violation import Violation
 
 
 @dataclass
@@ -31,10 +31,7 @@ class FileChecker(cst.CSTTransformer):
             self.lines = f.readlines()
 
     def parse_file(self) -> None:
-        try:  # noqa: SIM105
-            self.module = cst.parse_module("".join(self.lines))
-        except (SyntaxError, ValueError):
-            ...
+        self.module = cst.parse_module("".join(self.lines))
 
     def wrap_metadata(self) -> None:
         self.wrapper = cst.MetadataWrapper(self.module)
@@ -46,14 +43,18 @@ class FileChecker(cst.CSTTransformer):
             if self.applies_to_line(rule, self.get_line(original_node)):
                 check_result = rule.check(original_node)
                 if not check_result:
-                    violation = self.violation_from_node(original_node)
-                    self.violations.append(violation)
+                    violation = self.report_violation(original_node)
                     if self.fix:
                         fix_result = rule.fix(updated_node)
                         if fix_result is not None:
                             violation.fix()
                             return fix_result
         return updated_node
+
+    def report_violation(self, node: cst.BaseExpression) -> Violation:
+        violation = self.violation_from_node(node)
+        self.violations.append(violation)
+        return violation
 
     @functools.cached_property
     def ignored_codes(self) -> IgnoredLines:
@@ -91,7 +92,14 @@ class FileChecker(cst.CSTTransformer):
             f.write(node.code)
 
     @classmethod
-    def lint_file(cls, filename: str) -> Iterable[Violation]:
-        linter = cls(filename)
+    def lint_file(cls, filename: str) -> Iterable[Error | Violation]:
+        try:
+            linter = cls(filename)
+        except cst.ParserSyntaxError as e:
+            yield Error(Location(filename, Position(e.raw_line, e.raw_column + 1)), "Syntax Error")
+            return
+        except OSError as e:
+            yield Error(Location(filename, None), type(e).__name__)
+            return
         linter.check()
         yield from linter.violations
