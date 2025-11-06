@@ -42,3 +42,6 @@ class Report:
                 case _:
                     raise TypeError()
         return cls(errors, violations)
+
+    def __bool__(self) -> bool:
+        return bool(self.errors or self.violations)
