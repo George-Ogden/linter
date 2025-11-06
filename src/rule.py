@@ -7,7 +7,7 @@ from typing import Any, ClassVar, Final
 import libcst as cst
 
 
-class Rule[NodeT: cst.BaseExpression, CheckT](abc.ABC):
+class Rule[NodeT: cst.BaseExpression](abc.ABC):
     rules: Final[Mapping[str, type[Rule]]] = {}
     rule_name: ClassVar[str]
     node_names: ClassVar[tuple[str, ...]]
@@ -21,8 +21,8 @@ class Rule[NodeT: cst.BaseExpression, CheckT](abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def check(cls, node: NodeT) -> CheckT | None: ...
+    def check(cls, node: NodeT) -> bool: ...
 
     @classmethod
     @abc.abstractmethod
-    def fix(cls, info: CheckT, /) -> cst.BaseExpression | None: ...
+    def fix(cls, node: NodeT, /) -> cst.BaseExpression | None: ...

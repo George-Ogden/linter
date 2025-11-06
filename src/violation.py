@@ -1,10 +1,15 @@
-from typing import NamedTuple
+from dataclasses import dataclass, field
 
 import libcst as cst
 
 from .position import Location
 
 
-class Violation(NamedTuple):
+@dataclass
+class Violation:
     location: Location
-    node: cst.BaseExpression
+    node: cst.BaseExpression = field(repr=False)
+    fixed: bool
+
+    def fix(self) -> None:
+        self.fixed = True

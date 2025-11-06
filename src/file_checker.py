@@ -1,7 +1,7 @@
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 import functools
-from typing import Any, ClassVar
+from typing import ClassVar
 
 import libcst as cst
 from libcst._position import CodeRange
@@ -40,13 +40,19 @@ class FileChecker(cst.CSTTransformer):
         self.wrapper = cst.MetadataWrapper(self.module)
 
     def check_rules[NodeT: cst.BaseExpression](
-        self, original_node: NodeT, updated_node: NodeT, *, rules: Sequence[type[Rule[NodeT, Any]]]
+        self, original_node: NodeT, updated_node: NodeT, *, rules: Sequence[type[Rule[NodeT]]]
     ) -> cst.BaseExpression:
         for rule in rules:
             if self.applies_to_line(rule, self.get_line(original_node)):
-                result = rule.check(original_node)
-                if result is not None:
-                    self.violations.append(self.violation_from_node(original_node))
+                check_result = rule.check(original_node)
+                if not check_result:
+                    violation = self.violation_from_node(original_node)
+                    self.violations.append(violation)
+                    if self.fix:
+                        fix_result = rule.fix(updated_node)
+                        if fix_result is not None:
+                            violation.fix()
+                            return fix_result
         return updated_node
 
     @functools.cached_property
@@ -58,7 +64,7 @@ class FileChecker(cst.CSTTransformer):
 
     def violation_from_node(self, node: cst.BaseExpression) -> Violation:
         position = self.get_position(node)
-        return Violation(Location(self.filename, position), node)
+        return Violation(Location(self.filename, position), node, fixed=False)
 
     def get_position(self, node: cst.BaseExpression) -> None | Position:
         range: CodeRange | None = self.get_metadata(metadata.PositionProvider, node)
@@ -72,7 +78,17 @@ class FileChecker(cst.CSTTransformer):
         return position.line
 
     def check(self) -> None:
-        self.wrapper.visit(self)
+        updated_node = self.wrapper.visit(self)
+        if self.made_changes:
+            self.overwrite(updated_node)
+
+    @property
+    def made_changes(self) -> bool:
+        return any(violation.fixed for violation in self.violations)
+
+    def overwrite(self, node: cst.Module) -> None:
+        with open(self.filename, "w") as f:
+            f.write(node.code)
 
     @classmethod
     def lint_file(cls, filename: str) -> Iterable[Violation]:

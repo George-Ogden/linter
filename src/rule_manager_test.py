@@ -14,8 +14,9 @@ class IntegerRuleMock(RuleMock[cst.Integer]):
     node_names: ClassVar[tuple[str]] = ("Integer",)
 
     @classmethod
-    def check(cls, node: cst.Integer) -> None:
+    def check(cls, node: cst.Integer) -> bool:
         cls._mock(node.evaluated_value)
+        return True
 
 
 class StringRuleMock(RuleMock[cst.SimpleString]):
@@ -24,8 +25,9 @@ class StringRuleMock(RuleMock[cst.SimpleString]):
     _mock: ClassVar[mock.MagicMock] = mock.MagicMock()
 
     @classmethod
-    def check(cls, node: cst.SimpleString) -> None:
+    def check(cls, node: cst.SimpleString) -> bool:
         cls._mock(node.evaluated_value)
+        return True
 
 
 class StringAndIntegerRuleMock(RuleMock[cst.Integer | cst.SimpleString]):
@@ -34,14 +36,9 @@ class StringAndIntegerRuleMock(RuleMock[cst.Integer | cst.SimpleString]):
     _mock: ClassVar[mock.MagicMock] = mock.MagicMock()
 
     @classmethod
-    def check(
-        cls,
-        node: cst.Integer | cst.SimpleString,
-    ) -> None:
+    def check(cls, node: cst.Integer | cst.SimpleString) -> bool:
         cls._mock(node.evaluated_value)
-
-    @classmethod
-    def fix(cls, info: None) -> None: ...
+        return True
 
 
 @pytest.fixture

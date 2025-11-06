@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from ..test_utils import check_rules_test_body
+from ..test_utils import check_rules_test_body, fix_rules_test_body
 
 
 @pytest.mark.parametrize(
@@ -18,3 +18,10 @@ from ..test_utils import check_rules_test_body
 def test_check_string_keyed_dict(name: str, expected_positions: list[tuple[int, int]]) -> None:
     filename = os.path.join("string_keyed_dict", f"{name}.py")
     check_rules_test_body(["string-keyed-dict"], filename, expected_positions)
+
+
+@pytest.mark.parametrize("name, expected", [("errors", "expected")])
+def test_fix_string_keyed_dict(name: str, expected: str) -> None:
+    filename = os.path.join("string_keyed_dict", f"{name}.py")
+    expected_filename = os.path.join("string_keyed_dict", f"{expected}.py")
+    fix_rules_test_body(["string-keyed-dict"], filename, expected_filename)
