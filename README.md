@@ -30,6 +30,8 @@ options:
   --include INCLUDE  Comma separated list of rules to include (defaults to all rules).
 ```
 
+While it tries to keep the formatting as consistent as possible, consider using an additional formatter, such as [Ruff](https://github.com/astral-sh/ruff).
+
 ### Pre-Commit
 
 This is available as a pre-commit hook!
@@ -41,6 +43,8 @@ This is available as a pre-commit hook!
     - id: lint
       args: [--fix]
 ```
+
+Again, recommended to use with a formatter.
 
 ## Rules
 
