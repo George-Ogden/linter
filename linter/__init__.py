@@ -1,1 +1,1 @@
-from . import rules  # noqa: F401
+from . import rules as rules

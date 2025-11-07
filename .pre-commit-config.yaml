@@ -19,10 +19,19 @@ repos:
     rev: v0.14.3
     hooks:
       - id: ruff-format
-        exclude: ^test_samples
+        exclude: ^test_data/
       - id: ruff-check
+        exclude: ^test_data/
         args:
           - --fix
+
+  - repo: .
+    rev: HEAD
+    hooks:
+      - id: lint
+        args:
+          - --fix
+        exclude: ^test_data/
 
   - repo: https://github.com/George-Ogden/pre-commit-hooks
     rev: v1.4.1

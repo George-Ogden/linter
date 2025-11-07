@@ -1,0 +1,6 @@
+- id: lint
+  name: lint
+  description: Lint Python code
+  entry: lint
+  types: [python]
+  language: python
