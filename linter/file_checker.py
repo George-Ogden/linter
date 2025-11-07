@@ -25,6 +25,7 @@ class FileChecker(cst.CSTTransformer):
         self.parse_file()
         self.wrap_metadata()
         self.violations: list[Violation] = []
+        self.record_violations = True
 
     def read_file(self) -> None:
         with open(self.filename) as f:
@@ -48,12 +49,21 @@ class FileChecker(cst.CSTTransformer):
                         fix_result = rule.fix(updated_node)
                         if fix_result is not None:
                             violation.fix()
-                            return fix_result
+                            return self._apply_fixup(fix_result)
         return updated_node
+
+    def _apply_fixup(self, node: cst.BaseExpression) -> cst.BaseExpression:
+        record_violations = self.record_violations
+        self.record_violations = False
+        try:
+            return node.visit(self)  # type: ignore
+        finally:
+            self.record_violations = record_violations
 
     def report_violation(self, node: cst.BaseExpression) -> Violation:
         violation = self.violation_from_node(node)
-        self.violations.append(violation)
+        if self.record_violations:
+            self.violations.append(violation)
         return violation
 
     @functools.cached_property
@@ -70,7 +80,10 @@ class FileChecker(cst.CSTTransformer):
         )
 
     def get_position(self, node: cst.BaseExpression) -> None | Position:
-        range: CodeRange | None = self.get_metadata(metadata.PositionProvider, node)
+        try:
+            range: CodeRange | None = self.get_metadata(metadata.PositionProvider, node)
+        except KeyError:
+            return None
         position = None if range is None else Position(range.start.line, range.start.column + 1)
         return position
 
