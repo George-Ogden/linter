@@ -3,11 +3,11 @@ import functools
 import re
 import token
 import tokenize
-from typing import cast
+from typing import TypeAlias, cast
 
 from .fullset import fullset
 
-type IgnoredLines = dict[int, fullset[str]]
+IgnoredLines: TypeAlias = dict[int, fullset[str]]
 
 
 class NoqaFinder:
