@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+import difflib
 import filecmp
 import os
 from pathlib import Path
@@ -34,8 +35,10 @@ def check_rules_test_body(
     file_checker = RuleManager.from_rule_names(*rules, fix=False)
     violations = list(file_checker.lint_file(str(TEST_DATA_DIR / filename)))
     assert all(isinstance(violation, Violation) for violation in violations)
-    violation_positions = [violation.location.position for violation in violations]
+    violation_positions = [cast(Position, violation.location.position) for violation in violations]
     expected = [Position(line, char) for line, char in expected_positions]
+    violation_positions.sort()
+    expected.sort()
     assert violation_positions == expected
     assert all(not cast(Violation, violation).fixed for violation in violations)
 
@@ -53,4 +56,15 @@ def fix_rules_test_body(rules: Iterable[str], filename: str, expected_filename: 
             source = f.read()
             print(source)
 
-        assert filecmp.cmp(temp_filepath, TEST_DATA_DIR / expected_filename)
+        expected_path = TEST_DATA_DIR / expected_filename
+        with open(expected_path) as f:
+            expected = f.read()
+
+        assert filecmp.cmp(temp_filepath, expected_path), "\n".join(
+            difflib.unified_diff(
+                expected.splitlines(),
+                source.splitlines(),
+                fromfile=str(expected_path),
+                tofile=filename,
+            )
+        )

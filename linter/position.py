@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from typing_extensions import Self
+
 
 @dataclass(frozen=True)
 class Position:
@@ -8,6 +10,9 @@ class Position:
 
     def format(self) -> str:
         return f"{self.line}:{self.char}"
+
+    def __lt__(self, other: Self) -> bool:
+        return (self.line, self.char) < (other.line, other.char)
 
 
 @dataclass(frozen=True)
