@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from typing import ClassVar
 
 import libcst as cst
@@ -26,4 +27,25 @@ class FrozendictDictRule(Rule[cst.Call]):
 
     @classmethod
     def fix(cls, node: cst.Call) -> cst.BaseExpression | None:
-        raise NotImplementedError()
+        callee = node.func
+        [arg] = node.args
+        args: Sequence[cst.Arg]
+        if arg.star == "**":
+            args = [arg.with_changes(star="")]
+            whitespace_before_args = node.whitespace_before_args
+        elif isinstance(arg.value, cst.Dict):
+            args = []
+            whitespace_before_args = cst.SimpleWhitespace("")
+        else:
+            assert isinstance(arg.value, cst.Call)
+            args = arg.value.args
+            whitespace_before_args = arg.value.whitespace_before_args
+
+        return cst.Call(
+            callee,
+            args,
+            lpar=node.lpar,
+            rpar=node.rpar,
+            whitespace_after_func=node.whitespace_after_func,
+            whitespace_before_args=whitespace_before_args,
+        )

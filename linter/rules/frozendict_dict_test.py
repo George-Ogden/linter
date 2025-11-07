@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from ..test_utils import check_rules_test_body
+from ..test_utils import check_rules_test_body, fix_rules_test_body
 
 
 @pytest.mark.parametrize(
@@ -21,3 +21,13 @@ from ..test_utils import check_rules_test_body
 def test_check_frozendict_dict(name: str, expected_positions: list[tuple[int, int]]) -> None:
     filename = os.path.join("frozendict_dict", f"{name}.py")
     check_rules_test_body(["frozendict-dict"], filename, expected_positions)
+
+
+@pytest.mark.parametrize(
+    "name, expected",
+    [("empty", "empty"), ("errors", "expected"), ("indirect", "indirect_expected")],
+)
+def test_fix_frozendict_dict(name: str, expected: str) -> None:
+    filename = os.path.join("frozendict_dict", f"{name}.py")
+    expected_filename = os.path.join("frozendict_dict", f"{expected}.py")
+    fix_rules_test_body(["frozendict-dict"], filename, expected_filename)
