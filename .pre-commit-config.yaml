@@ -33,3 +33,10 @@ repos:
         exclude: ^test_data/
         args: [-r, requirements-dev.txt]
       - id: spell-check-commit-msgs
+
+  - repo: .
+    rev: HEAD
+    hooks:
+      - id: lint
+        args:
+          - --fix
