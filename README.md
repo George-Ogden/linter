@@ -38,7 +38,7 @@ This is available as a pre-commit hook!
 
 ```yaml
 - repo: https://github.com/George-Ogden/linter/
-  rev: v1.1.0
+  rev: v1.2.0
   hooks:
     - id: lint
       args: [--fix]
