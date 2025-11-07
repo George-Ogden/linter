@@ -2,18 +2,30 @@
 name = "linter"
 version = "0.1.0"
 dynamic = ["dependencies"]
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.12,<3.14"
 
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[project.scripts]
+lint = "main:main_cli"
+
+[tool.setuptools]
+py-modules = ["main"]
+packages = ["linter"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
 [tool.ruff]
 line-length = 100
+exclude = ["test_data/general/syntax.py"]
 
 [tool.ruff.lint]
 extend-select = ["B", "E", "ERA", "F", "I", "N", "PT", "PYI", "RET", "RUF", "SIM", "UP", "W"]
 extend-ignore = ["B028", "E501", "F811", "PT011", "PT012", "PYI041", "RET504", "SIM118"]
+per-file-ignores = { "test_data/*" = ["RUF100"] }
 
 [tool.ruff.lint.isort]
 force-sort-within-sections = true
@@ -25,9 +37,6 @@ parametrize-names-type = "csv"
 quote-style = "double"
 indent-style = "space"
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
-
 [tool.mypy]
 warn_unreachable = true
 disallow_subclassing_any = true
@@ -35,3 +44,7 @@ disallow_incomplete_defs = true
 disallow_untyped_defs = true
 warn_unused_ignores = true
 strict_equality = true
+exclude = ["test_data/"]
+
+[tool.pytest.ini_options]
+addopts = '--capture=sys'
