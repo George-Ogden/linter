@@ -1,1 +1,2 @@
 libcst>=1.8.4
+typing-extensions

@@ -1,6 +1,8 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Generic, Self, TypeVar
+from typing import Generic, TypeVar
+
+from typing_extensions import Self
 
 T = TypeVar("T")
 
