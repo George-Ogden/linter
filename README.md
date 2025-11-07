@@ -30,17 +30,21 @@ options:
   --include INCLUDE  Comma separated list of rules to include (defaults to all rules).
 ```
 
+While it tries to keep the formatting as consistent as possible, consider using an additional formatter, such as [Ruff](https://github.com/astral-sh/ruff).
+
 ### Pre-Commit
 
 This is available as a pre-commit hook!
 
 ```yaml
 - repo: https://github.com/George-Ogden/linter/
-  rev: v1.1.0
+  rev: v1.2.0
   hooks:
     - id: lint
       args: [--fix]
 ```
+
+Again, recommended to use with a formatter.
 
 ## Rules
 
@@ -73,6 +77,20 @@ set(x + 1 for x in range(5))
 # is rewritten as
 {x + 1 for x in range(5)}
 ```
+
+### `frozendict-dict`
+
+Use the same constructor for a frozendict as you would for a `dict`.
+
+```python
+f1 = frozendict(dict(k=v))
+f2 = frozendict(**some_mapping)
+# is rewritten as
+f1 = frozendict(k=v)
+f2 = frozendict(some_mapping)
+```
+
+This makes it easier to maintain and edit your dictionaries.
 
 ## Advanced Usage
 

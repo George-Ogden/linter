@@ -20,7 +20,7 @@ def test_check_string_keyed_dict(name: str, expected_positions: list[tuple[int, 
     check_rules_test_body(["string-keyed-dict"], filename, expected_positions)
 
 
-@pytest.mark.parametrize("name, expected", [("errors", "expected")])
+@pytest.mark.parametrize("name, expected", [("empty", "empty"), ("errors", "expected")])
 def test_fix_string_keyed_dict(name: str, expected: str) -> None:
     filename = os.path.join("string_keyed_dict", f"{name}.py")
     expected_filename = os.path.join("string_keyed_dict", f"{expected}.py")
