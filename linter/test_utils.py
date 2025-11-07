@@ -34,8 +34,10 @@ def check_rules_test_body(
     file_checker = RuleManager.from_rule_names(*rules, fix=False)
     violations = list(file_checker.lint_file(str(TEST_DATA_DIR / filename)))
     assert all(isinstance(violation, Violation) for violation in violations)
-    violation_positions = [violation.location.position for violation in violations]
+    violation_positions = [cast(Position, violation.location.position) for violation in violations]
     expected = [Position(line, char) for line, char in expected_positions]
+    violation_positions.sort()
+    expected.sort()
     assert violation_positions == expected
     assert all(not cast(Violation, violation).fixed for violation in violations)
 
