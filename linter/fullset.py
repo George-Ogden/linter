@@ -1,10 +1,14 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Self
+from typing import Generic, TypeVar
+
+from typing_extensions import Self
+
+T = TypeVar("T")
 
 
 @dataclass(init=False, frozen=True)
-class fullset[T]:  # noqa: N801
+class fullset(Generic[T]):  # noqa: N801
     _values: set[T] | None
 
     def __init__(self, items: Iterable[T] | None = ()) -> None:

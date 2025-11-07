@@ -1,7 +1,8 @@
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 import functools
-from typing import Self
+
+from typing_extensions import Self
 
 from .feedback import Error, Violation
 

@@ -10,7 +10,7 @@ import libcst.metadata as metadata
 from .feedback import Error, Violation
 from .noqa_finder import IgnoredLines, NoqaFinder
 from .position import Location, Position
-from .rule import Rule
+from .rule import NodeT, Rule
 
 
 @dataclass
@@ -36,7 +36,7 @@ class FileChecker(cst.CSTTransformer):
     def wrap_metadata(self) -> None:
         self.wrapper = cst.MetadataWrapper(self.module)
 
-    def check_rules[NodeT: cst.BaseExpression](
+    def check_rules(
         self, original_node: NodeT, updated_node: NodeT, *, rules: Sequence[type[Rule[NodeT]]]
     ) -> cst.BaseExpression:
         for rule in rules:

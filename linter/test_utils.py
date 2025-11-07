@@ -7,17 +7,15 @@ import tempfile
 from typing import ClassVar, Final, cast
 from unittest import mock
 
-import libcst as cst
-
 from .feedback import Violation
 from .position import Position
-from .rule import Rule
+from .rule import NodeT, Rule
 from .rule_manager import RuleManager
 
 TEST_DATA_DIR: Final[Path] = Path("test_data/")
 
 
-class RuleMock[NodeT: cst.BaseExpression](Rule[NodeT]):
+class RuleMock(Rule[NodeT]):
     _mock: ClassVar[mock.MagicMock] = mock.MagicMock()
     rule_name = "rule-mock"
     node_names: ClassVar[tuple[str, ...]] = ()

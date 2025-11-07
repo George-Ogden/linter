@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import abc
 from collections.abc import Mapping
-from typing import Any, ClassVar, Final
+from typing import Any, ClassVar, Final, Generic, TypeVar
 
 import libcst as cst
 
+NodeT = TypeVar("NodeT", bound=cst.BaseExpression)
 
-class Rule[NodeT: cst.BaseExpression](abc.ABC):
+
+class Rule(abc.ABC, Generic[NodeT]):
     rules: Final[Mapping[str, type[Rule]]] = {}
     rule_name: ClassVar[str]
     node_names: ClassVar[tuple[str, ...]]
