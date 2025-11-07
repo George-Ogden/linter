@@ -64,6 +64,16 @@ dict(
 
 This makes it easier to maintain and edit your dictionaries.
 
+### `set-comprehension`
+
+Rewrite a set of a comprehension as a set comprehension.
+
+```python
+set(x + 1 for x in range(5))
+# is rewritten as
+{x + 1 for x in range(5)}
+```
+
 ## Advanced Usage
 
 ### Ignoring Instances
