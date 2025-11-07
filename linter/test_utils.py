@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+import difflib
 import filecmp
 import os
 from pathlib import Path
@@ -55,4 +56,15 @@ def fix_rules_test_body(rules: Iterable[str], filename: str, expected_filename: 
             source = f.read()
             print(source)
 
-        assert filecmp.cmp(temp_filepath, TEST_DATA_DIR / expected_filename)
+        expected_path = TEST_DATA_DIR / expected_filename
+        with open(expected_path) as f:
+            expected = f.read()
+
+        assert filecmp.cmp(temp_filepath, expected_path), "\n".join(
+            difflib.unified_diff(
+                expected.splitlines(),
+                source.splitlines(),
+                fromfile=str(expected_path),
+                tofile=filename,
+            )
+        )

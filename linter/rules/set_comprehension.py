@@ -1,4 +1,4 @@
-from typing import ClassVar
+from typing import ClassVar, cast
 
 import libcst as cst
 import libcst.matchers as m
@@ -13,9 +13,30 @@ class SetComprehensionRule(Rule[cst.Call]):
     @classmethod
     def check(cls, node: cst.Call) -> bool:
         return not m.matches(
-            node, m.Call(func=m.Name("set"), args=[m.Arg(m.GeneratorExp() | m.SetComp())])
+            node,
+            m.Call(
+                m.Name("set"),
+                [
+                    m.Arg(
+                        m.GeneratorExp() | m.SetComp(),
+                        keyword=None,
+                        star="",
+                    )
+                ],
+            ),
         )
 
     @classmethod
     def fix(cls, node: cst.Call) -> cst.BaseExpression | None:
-        raise NotImplementedError
+        [arg] = node.args
+        comp = cast(cst.GeneratorExp | cst.SetComp, arg.value)
+        match comp:
+            case cst.GeneratorExp():
+                lbrace = cst.LeftCurlyBrace(whitespace_after=node.whitespace_before_args)
+                rbrace = cst.RightCurlyBrace(arg.whitespace_after_arg)
+            case cst.SetComp():
+                lbrace = comp.lbrace
+                rbrace = comp.rbrace
+            case _:
+                raise TypeError()
+        return cst.SetComp(elt=comp.elt, for_in=comp.for_in, lbrace=lbrace, rbrace=rbrace)
