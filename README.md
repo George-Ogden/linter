@@ -78,6 +78,20 @@ set(x + 1 for x in range(5))
 {x + 1 for x in range(5)}
 ```
 
+### `frozendict-dict`
+
+Use the same constructor for a frozendict as you would for a `dict`.
+
+```python
+f1 = frozendict(dict(k=v))
+f2 = frozendict(**some_mapping)
+# is rewritten as
+f1 = frozendict(k=v)
+f2 = frozendict(some_mapping)
+```
+
+This makes it easier to maintain and edit your dictionaries.
+
 ## Advanced Usage
 
 ### Ignoring Instances
