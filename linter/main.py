@@ -39,7 +39,3 @@ def main(args: argparse.Namespace) -> bool:
 def main_cli() -> NoReturn:
     args = parse_args()
     sys.exit(main(args))
-
-
-if __name__ == "__main__":
-    main_cli()
