@@ -1,6 +1,6 @@
 [project]
 name = "linter"
-version = "1.2.0"
+version = "1.2.1"
 dynamic = ["dependencies"]
 requires-python = ">=3.10,<3.15"
 
@@ -9,17 +9,18 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-lint = "main:main_cli"
+lint = "linter:main_cli"
 
-[tool.setuptools]
-py-modules = ["main"]
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["linter*"]
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+[build.system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 line-length = 100

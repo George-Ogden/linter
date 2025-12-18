@@ -25,8 +25,8 @@ repos:
         args:
           - --fix
 
-  - repo: .
-    rev: HEAD
+  - repo: https://github.com/George-Ogden/linter
+    rev: v1.2.0
     hooks:
       - id: lint
         args:
@@ -34,7 +34,7 @@ repos:
         exclude: ^test_data/
 
   - repo: https://github.com/George-Ogden/pre-commit-hooks
-    rev: v1.4.1
+    rev: v2.0.3
     hooks:
       - id: check-merge-conflict
       - id: todo-check

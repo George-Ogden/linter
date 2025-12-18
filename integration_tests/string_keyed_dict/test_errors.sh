@@ -5,7 +5,7 @@ set -o pipefail
 DIRECTORY=$(basename $(dirname $0))
 LOG=`mktemp`
 
-python main.py test_data/$DIRECTORY/errors.py | tee $LOG && exit 1
+python linter test_data/$DIRECTORY/errors.py | tee $LOG && exit 1
 grep -F 'errors.py:1:5: {"a": 1}' $LOG
 grep -F 'errors.py:4:5: {"a": 3, "b": 4}' $LOG
 grep -F 'errors.py:5:5: {"book_mark": 3}' $LOG

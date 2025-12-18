@@ -56,11 +56,11 @@ for folder, params in TEST_FILES.items():
     keys = list(params.keys())
     code = textwrap.dedent(
         f"""
-        import subprocess
+        import os, subprocess
         @pytest.mark.parametrize("test_name", {keys})
         def test_{folder}(test_name: str) -> None:
             test_script = TEST_FILES["{folder}"][test_name]
-            subprocess.run(test_script, shell=True, check=True)
+            subprocess.run(test_script, shell=True, check=True, env=os.environ | dict(PYTHONPATH="."))
         """
     )
     exec(code)
