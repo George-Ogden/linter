@@ -1,4 +1,6 @@
-from typing import Any, ClassVar
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, ClassVar
 from unittest import mock
 
 import libcst as cst
@@ -7,6 +9,9 @@ import pytest
 from .file_checker import FileChecker
 from .rule_manager import RuleManager
 from .test_utils import RuleMock
+
+if TYPE_CHECKING:
+    from mypy_pytest_plugin_types.mock import MagicMock
 
 
 class IntegerRuleMock(RuleMock[cst.Integer]):
@@ -22,7 +27,7 @@ class IntegerRuleMock(RuleMock[cst.Integer]):
 class StringRuleMock(RuleMock[cst.SimpleString]):
     rule_name: ClassVar[str] = "string-mock"
     node_names: ClassVar[tuple[str]] = ("SimpleString",)
-    _mock: ClassVar[mock.MagicMock] = mock.MagicMock()
+    _mock: ClassVar[MagicMock] = mock.MagicMock()
 
     @classmethod
     def check(cls, node: cst.SimpleString) -> bool:
@@ -33,7 +38,7 @@ class StringRuleMock(RuleMock[cst.SimpleString]):
 class StringAndIntegerRuleMock(RuleMock[cst.Integer | cst.SimpleString]):
     rule_name: ClassVar[str] = "string-integer-mock"
     node_names: ClassVar[tuple[str, str]] = ("SimpleString", "Integer")
-    _mock: ClassVar[mock.MagicMock] = mock.MagicMock()
+    _mock: ClassVar[MagicMock] = mock.MagicMock()
 
     @classmethod
     def check(cls, node: cst.Integer | cst.SimpleString) -> bool:

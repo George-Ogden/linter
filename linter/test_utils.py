@@ -1,11 +1,13 @@
-from collections.abc import Iterable
+from __future__ import annotations
+
+from collections.abc import Sequence
 import difflib
 import filecmp
 import os
 from pathlib import Path
 import shutil
 import tempfile
-from typing import ClassVar, Final, cast
+from typing import TYPE_CHECKING, ClassVar, Final, cast
 from unittest import mock
 
 from .feedback import Violation
@@ -15,9 +17,12 @@ from .rule_manager import RuleManager
 
 TEST_DATA_DIR: Final[Path] = Path("test_data/")
 
+if TYPE_CHECKING:
+    from mypy_pytest_plugin_types.mock import MagicMock
+
 
 class RuleMock(Rule[NodeT]):
-    _mock: ClassVar[mock.MagicMock] = mock.MagicMock()
+    _mock: ClassVar[MagicMock] = mock.MagicMock()
     rule_name = "rule-mock"
     node_names: ClassVar[tuple[str, ...]] = ()
 
@@ -30,7 +35,7 @@ class RuleMock(Rule[NodeT]):
 
 
 def check_rules_test_body(
-    rules: Iterable[str], filename: str, expected_positions: list[tuple[int, int]]
+    rules: Sequence[str], filename: str, expected_positions: list[tuple[int, int]]
 ) -> None:
     file_checker = RuleManager.from_rule_names(*rules, fix=False)
     violations = list(file_checker.lint_file(str(TEST_DATA_DIR / filename)))
@@ -43,7 +48,7 @@ def check_rules_test_body(
     assert all(not cast(Violation, violation).fixed for violation in violations)
 
 
-def fix_rules_test_body(rules: Iterable[str], filename: str, expected_filename: str) -> None:
+def fix_rules_test_body(rules: Sequence[str], filename: str, expected_filename: str) -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_filepath = Path(temp_dir) / os.path.basename(filename)
         shutil.copy2(TEST_DATA_DIR / filename, temp_filepath)

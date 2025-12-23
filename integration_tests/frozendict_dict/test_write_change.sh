@@ -2,7 +2,7 @@
 
 set -e
 set -o pipefail
-DIRECTORY=$(basename $(dirname $0))
+DIRECTORY=$(basename "$(dirname $0)")
 LOG=`mktemp`
 
 python linter --fix test_data/$DIRECTORY/{{,no_}errors,combined}.py --fix | tee $LOG && exit 1

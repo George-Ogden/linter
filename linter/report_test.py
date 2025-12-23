@@ -89,7 +89,7 @@ def test_file_report_display(
             feedback.append(Error(Location(filename, position), msg))
         else:
             feedback.append(Violation(Location(filename, position), code, fixed))  # type: ignore
-    report = Report.from_feedback(feedback)
+    report = Report.from_feedback(iter(feedback))
     report.display()
     out, err = capsys.readouterr()
     assert err == ""

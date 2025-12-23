@@ -69,4 +69,4 @@ def test_find_noqas(filename: str, expected: IgnoredLines) -> None:
     with open(TEST_DATA_DIR / "noqa" / f"{filename}.py") as f:
         lines = f.readlines()
 
-    assert NoqaFinder.parse_lines(lines) == expected
+    assert NoqaFinder.parse_lines(iter(lines)) == expected
