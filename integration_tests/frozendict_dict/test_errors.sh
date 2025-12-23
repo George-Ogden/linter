@@ -2,7 +2,7 @@
 
 set -e
 set -o pipefail
-DIRECTORY=$(basename $(dirname $0))
+DIRECTORY=$(basename "$(dirname $0)")
 LOG=`mktemp`
 
 python linter test_data/$DIRECTORY/indirect.py | tee $LOG && exit 1

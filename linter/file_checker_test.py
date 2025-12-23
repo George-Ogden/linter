@@ -37,4 +37,4 @@ def test_check_file_using_dir_returns_error() -> None:
 def test_fix_rules(name: str, expected: str) -> None:
     filename = f"{name}.py"
     expected_filename = f"{expected}.py"
-    fix_rules_test_body(Rule.rules.keys(), filename, expected_filename)
+    fix_rules_test_body(list(Rule.rules.keys()), filename, expected_filename)
