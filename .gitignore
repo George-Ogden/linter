@@ -1,3 +1,16 @@
+# Specific Files
+tmp.py
+log.txt
+stdout.txt
+out.txt
+stderr.txt
+err.txt
+notes.txt
+TODO
+*.pseudo
+*.patch
+nohup*
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -172,19 +185,10 @@ pyrightconfig.json
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
 
 # Local History for Visual Studio Code
-.history/
+.history
+.ionide
 
 # Built Visual Studio Code Extensions
 *.vsix
-
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
-.ionide

@@ -1,0 +1,18 @@
+line-length = 100
+exclude = ["test_data/general/syntax.py"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+
+[lint]
+extend-select = ["B", "E", "ERA", "F", "I", "N", "PT", "PYI", "RET", "RUF", "SIM", "UP", "W"]
+extend-ignore = ["E501", "F811", "PT011", "PT012", "PT013", "PYI041", "RET504", "SIM118"]
+extend-unfixable = ["B905"]
+per-file-ignores = { "test_data/*" = ["RUF100"] }
+
+[lint.isort]
+force-sort-within-sections = true
+
+[lint.flake8-pytest-style]
+parametrize-names-type = "csv"
