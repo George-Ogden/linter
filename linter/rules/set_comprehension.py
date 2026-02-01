@@ -14,16 +14,7 @@ class SetComprehensionRule(Rule[cst.Call]):
     def check(cls, node: cst.Call) -> bool:
         return not m.matches(
             node,
-            m.Call(
-                m.Name("set"),
-                [
-                    m.Arg(
-                        m.GeneratorExp() | m.SetComp(),
-                        keyword=None,
-                        star="",
-                    )
-                ],
-            ),
+            m.Call(m.Name("set"), [m.Arg(m.GeneratorExp() | m.SetComp(), keyword=None, star="")]),
         )
 
     @classmethod
