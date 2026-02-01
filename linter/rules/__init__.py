@@ -1,3 +1,2 @@
 from .frozendict_dict import FrozendictDictRule as FrozendictDictRule
-from .set_comprehension import SetComprehensionRule as SetComprehensionRule
 from .string_keyed_dict import StringKeyedDictRule as StringKeyedDictRule

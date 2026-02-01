@@ -38,7 +38,7 @@ This is available as a pre-commit hook!
 
 ```yaml
 - repo: https://github.com/George-Ogden/linter/
-  rev: v1.2.2
+  rev: v2.0.0
   hooks:
     - id: lint
       args: [--fix]
@@ -67,16 +67,6 @@ dict(
 ```
 
 This makes it easier to maintain and edit your dictionaries.
-
-### `set-comprehension`
-
-Rewrite a set of a comprehension as a set comprehension.
-
-```python
-set(x + 1 for x in range(5))
-# is rewritten as
-{x + 1 for x in range(5)}
-```
 
 ### `frozendict-dict`
 

@@ -37,9 +37,7 @@ class StringKeyedDictRule(Rule[cst.Dict]):
         if args:
             args[-1] = cls.reformat_last_arg(args[-1], node.rbrace.whitespace_before)
         return cst.Call(
-            cst.Name("dict"),
-            whitespace_before_args=node.lbrace.whitespace_after,
-            args=args,
+            cst.Name("dict"), whitespace_before_args=node.lbrace.whitespace_after, args=args
         )
 
     @classmethod
