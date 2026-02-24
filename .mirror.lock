@@ -1,5 +1,5 @@
 # DANGER: EDIT AT YOUR OWN RISK. Track this file in version control so that others can sync files correctly.
-- commit: 43cd03fe3c1a0613066b78987096815c34ed08e5
+- commit: 2831e96a9e22c1d575f51fcad698c10e6219c2c9
   files:
   - .github/python-release.yaml
   - .github/python-test.yaml
