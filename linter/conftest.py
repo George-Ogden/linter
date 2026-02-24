@@ -1,3 +1,6 @@
-from debug import install
+import sys
 
-install()
+if sys.version_info >= (3, 11):
+    from debug import install
+
+    install()
