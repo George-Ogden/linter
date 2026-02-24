@@ -48,6 +48,21 @@ Again, recommended to use with a formatter.
 
 ## Rules
 
+### `str-join`
+
+Everyone knows this is broken in Python, but they do it anyway.
+Now you can fix it!
+
+```python
+", ".join(data)
+".".join(attributes)
+# is rewritten as
+str.join(", ", data)
+str.join(".", attributes)
+```
+
+The linter is not type aware so `separator.join(data)` is not rewritten.
+
 ### `string-keyed-dict`
 
 Make string-based dictionaries use `dict` instead of curly braces. For example,
