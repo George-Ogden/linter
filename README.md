@@ -38,7 +38,7 @@ This is available as a pre-commit hook!
 
 ```yaml
 - repo: https://github.com/George-Ogden/linter/
-  rev: v2.0.0
+  rev: v2.1.0
   hooks:
     - id: lint
       args: [--fix]
@@ -47,6 +47,21 @@ This is available as a pre-commit hook!
 Again, recommended to use with a formatter.
 
 ## Rules
+
+### `str-join`
+
+Everyone knows this is broken in Python, but they do it anyway.
+Now you can fix it!
+
+```python
+", ".join(data)
+".".join(attributes)
+# is rewritten as
+str.join(", ", data)
+str.join(".", attributes)
+```
+
+The linter is not type aware so `separator.join(data)` is not rewritten.
 
 ### `string-keyed-dict`
 

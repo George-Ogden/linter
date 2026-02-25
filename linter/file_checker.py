@@ -4,8 +4,8 @@ import functools
 from typing import ClassVar
 
 import libcst as cst
+from libcst import metadata
 from libcst._position import CodeRange
-import libcst.metadata as metadata
 
 from .feedback import Error, Violation
 from .noqa_finder import IgnoredLines, NoqaFinder
@@ -15,7 +15,9 @@ from .rule import NodeT, Rule
 
 @dataclass
 class FileChecker(cst.CSTTransformer):
-    METADATA_DEPENDENCIES = (metadata.PositionProvider,)
+    METADATA_DEPENDENCIES: ClassVar[tuple[type[metadata.PositionProvider]]] = (
+        metadata.PositionProvider,
+    )
     fix: ClassVar[bool]
     rules: ClassVar[Sequence[type[Rule]]]
     filename: str
@@ -79,7 +81,7 @@ class FileChecker(cst.CSTTransformer):
             Location(self.filename, position), self.module.code_for_node(node), fixed=False
         )
 
-    def get_position(self, node: cst.BaseExpression) -> None | Position:
+    def get_position(self, node: cst.BaseExpression) -> Position | None:
         try:
             range: CodeRange | None = self.get_metadata(metadata.PositionProvider, node)
         except KeyError:
@@ -87,7 +89,7 @@ class FileChecker(cst.CSTTransformer):
         position = None if range is None else Position(range.start.line, range.start.column + 1)
         return position
 
-    def get_line(self, node: cst.BaseExpression) -> None | int:
+    def get_line(self, node: cst.BaseExpression) -> int | None:
         position = self.get_position(node)
         if position is None:
             return None
