@@ -18,7 +18,8 @@ class StrJoinRule(Rule[cst.Call]):
             m.Call(
                 m.Attribute(
                     m.SimpleString() | m.FormattedString() | m.ConcatenatedString(), m.Name("join")
-                )
+                ),
+                [m.Arg(keyword=None, star="")],
             ),
         )
 
