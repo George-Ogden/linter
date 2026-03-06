@@ -9,7 +9,7 @@ from ..test_utils import check_rules_test_body, fix_rules_test_body
     "name, expected_positions",
     [
         ("empty", []),
-        ("errors", [(1, 1), (4, 6), (7, 1), (9, 1)]),
+        ("errors", [(1, 1), (4, 6), (7, 1), (9, 1), (10, 1)]),
         ("no_errors", []),
         ("commented", [(4, 6)]),
     ],

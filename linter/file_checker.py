@@ -34,7 +34,7 @@ class FileChecker(cst.CSTTransformer):
             self.lines = f.readlines()
 
     def parse_file(self) -> None:
-        self.module = cst.parse_module("".join(self.lines))
+        self.module = cst.parse_module(str.join("", self.lines))
 
     def wrap_metadata(self) -> None:
         self.wrapper = cst.MetadataWrapper(self.module)
