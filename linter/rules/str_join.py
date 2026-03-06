@@ -1,3 +1,4 @@
+import dataclasses
 from typing import ClassVar
 
 import libcst as cst
@@ -24,9 +25,17 @@ class StrJoinRule(Rule[cst.Call]):
     @classmethod
     def fix(cls, node: cst.Call) -> cst.BaseExpression:
         assert isinstance(node.func, cst.Attribute)
+        [arg] = node.args
+        if isinstance(arg.value, cst.GeneratorExp) and not (arg.value.lpar and arg.value.rpar):
+            arg = dataclasses.replace(
+                arg,
+                value=dataclasses.replace(
+                    arg.value, lpar=[cst.LeftParen()], rpar=[cst.RightParen()]
+                ),
+            )
         return cst.Call(
             cst.Attribute(cst.Name("str"), cst.Name("join")),
-            [cst.Arg(node.func.value), *node.args],
+            [cst.Arg(node.func.value), arg],
             lpar=node.lpar,
             rpar=node.rpar,
             whitespace_after_func=node.whitespace_after_func,
