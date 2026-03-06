@@ -65,11 +65,12 @@ def fix_rules_test_body(rules: Sequence[str], filename: str, expected_filename: 
         with open(expected_path) as f:
             expected = f.read()
 
-        assert filecmp.cmp(temp_filepath, expected_path), "\n".join(
+        assert filecmp.cmp(temp_filepath, expected_path), str.join(
+            "\n",
             difflib.unified_diff(
                 expected.splitlines(),
                 source.splitlines(),
                 fromfile=str(expected_path),
                 tofile=filename,
-            )
+            ),
         )

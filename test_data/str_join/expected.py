@@ -7,3 +7,6 @@ str.join("", [])
 str.join(f"{0}", [])
 
 str.join(("a"  "b"), [])  # noqa: ISC001
+str.join((
+    " "  # commented
+), "abc")

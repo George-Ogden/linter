@@ -33,7 +33,7 @@ class RuleManager(cst.CSTTransformer):
     @classmethod
     def from_rules(cls, rules: Sequence[type[Rule]], *, fix: bool) -> type[FileChecker]:
         return type(
-            f"{FileChecker.__name__}[{','.join(rule.rule_name for rule in rules)}]",
+            f"{FileChecker.__name__}[{str.join(',', (rule.rule_name for rule in rules))}]",
             (FileChecker,),
             dict(rules=rules, fix=fix, **cls._rule_methods(rules)),
         )
