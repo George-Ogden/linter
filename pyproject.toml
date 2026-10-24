@@ -1,23 +1,70 @@
 [project]
 name = "linter"
 requires-python = ">=3.10,<3.15"
-authors = [{name = "George Ogden"}]
-license = {file = "LICENSE"}
+authors = [{ name = "George Ogden" }]
+license-files = ["LICENSE"]
 readme = "README.md"
-dynamic = ["dependencies", "version"]
+dynamic = ["version"]
+dependencies = [
+  "libcst>=1.8.4",
+  "more-itertools>=8.0.0",
+  "typing-extensions>=4.16.0",
+]
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
-version = {file = ["version.txt"]}
+[project.scripts]
+lint = "linter:main_cli"
 
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[dependency-groups]
+dev = [
+  "mirror-rorrim ; python_full_version >= '3.12'",
+  "py-spy",
+  { include-group = "lint" },
+  { include-group = "test" },
+  { include-group = "types" },
+]
+test = [
+  "GitPython",
+  "inline-snapshot",
+  "pytest>=9.0.0",
+  "pytest-dbg ; python_full_version >= '3.11'",
+  "pytest-timeout",
+  { include-group = "utils" },
+]
+lint = [
+  "prek",
+  "ruff==0.17.2",
+  "semgrep==1.181.1",
+]
+types = [
+  "mypy",
+  "mypy-pytest-plugin ; python_full_version >= '3.12'",
+  { include-group = "test" },
+]
+utils = [
+  "extra-type-helpers ; python_full_version >= '3.12'",
+  "georges-utils ; python_full_version >= '3.12'",
+]
+docs = [
+  "mkdocs<2",
+  "mkdocs-material",
+  "mkdocstrings",
+]
+
+[tool.uv.sources]
+mypy-pytest-plugin = { git = "https://github.com/George-Ogden/mypy-pytest" }
+extra-type-helpers = { git = "https://github.com/George-Ogden/extra-types" }
+georges-utils = { git = "https://github.com/George-Ogden/utils" }
+mirror-rorrim = { git = "https://github.com/George-Ogden/mirror-rorrim" }
+pytest-dbg = { git = "https://github.com/George-Ogden/pytest-dbg" }
+
+[tool.setuptools.dynamic]
+version = { file = ["version.txt"] }
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["linter*"]
 exclude = ["test*"]
-
-[project.scripts]
-lint = "linter:main_cli"

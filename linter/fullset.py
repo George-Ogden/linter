@@ -8,7 +8,7 @@ T = TypeVar("T")
 
 
 @dataclass(init=False, frozen=True)
-class fullset(Generic[T]):  # noqa: N801
+class fullset(Generic[T]):  # ruff: ignore[invalid-class-name]
     _values: set[T] | None
 
     def __init__(self, items: Iterable[T] | None = ()) -> None:

@@ -38,7 +38,7 @@ This is available as a pre-commit hook!
 
 ```yaml
 - repo: https://github.com/George-Ogden/linter/
-  rev: v2.1.1
+  rev: v2.1.2
   hooks:
     - id: lint
       args: [--fix]
@@ -68,17 +68,9 @@ The linter is not type aware so `separator.join(data)` is not rewritten.
 Make string-based dictionaries use `dict` instead of curly braces. For example,
 
 ```python
-{
-  "a": "ascii",
-  "r": repr,
-  "integer": 15,
-}
+{"a": "ascii", "r": repr, "integer": 15}
 # is rewritten as
-dict(
-  a="ascii",
-  r=repr,
-  integer=15
-)
+dict(a="ascii", r=repr, integer=15)
 ```
 
 This makes it easier to maintain and edit your dictionaries.
@@ -106,8 +98,8 @@ Put them on the first line they apply.
 
 ```python
 {  # noqa: string-keyed-dict # put it here!
-    "key": "value", # noqa # doesn't work here!
-} # noqa # doesn't work here either!
+    "key": "value"  # noqa # doesn't work here!
+}  # noqa # doesn't work here either!
 ```
 
 ## Development
