@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 
 from .feedback import Error
@@ -5,6 +7,13 @@ from .position import Location, Position
 from .rule import Rule
 from .rule_manager import RuleManager
 from .test_utils import TEST_DATA_DIR, fix_rules_test_body
+
+
+@pytest.mark.skipif(sys.version_info < (3, 15), reason="Modern Python syntax")
+def test_modern_syntax() -> None:
+    linter = RuleManager.from_rule_names(fix=False)
+    filename = str(TEST_DATA_DIR / "general" / "modern.py")
+    assert list(linter.lint_file(filename)) == []
 
 
 def test_check_syntax_error_returns_error() -> None:
