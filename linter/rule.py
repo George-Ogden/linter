@@ -17,7 +17,7 @@ class Rule(abc.ABC, Generic[NodeT]):
     def __init_subclass__(cls, *args: Any, **kwargs: Any) -> None:
         super().__init_subclass__(*args, **kwargs)
         cls()
-        cls.node_names  # noqa: B018
+        cls.node_names  # ruff: ignore[useless-expression]
         assert cls.rule_name not in cls.rules
         cls.rules[cls.rule_name] = cls  # type: ignore[index]
 

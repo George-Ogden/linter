@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 from dataclasses import dataclass
-import itertools
+
+import more_itertools as mit
 
 from .report import Report
 from .rule_manager import RuleManager
@@ -15,9 +16,7 @@ class LinterConfig:
     def run(self) -> Report:
         file_checker = RuleManager.from_rule_names(*self.included_rule_names, fix=self.fix)
         report = Report.from_feedback(
-            itertools.chain.from_iterable(
-                file_checker.lint_file(filename) for filename in self.filenames
-            )
+            mit.flatten(file_checker.lint_file(filename) for filename in self.filenames)
         )
         report.display()
         return report

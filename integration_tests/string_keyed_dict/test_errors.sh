@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 DIRECTORY=$(basename "$(dirname $0)")
-LOG=`mktemp`
+LOG=$(mktemp)
 
 python linter test_data/$DIRECTORY/errors.py | tee $LOG && exit 1
 grep -F 'errors.py:1:5: {"a": 1}' $LOG

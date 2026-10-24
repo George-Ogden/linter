@@ -2,7 +2,7 @@
 
 set -e
 set -o pipefail
-LOG=`mktemp`
+LOG=$(mktemp)
 DIRECTORY=$(basename "$(dirname $0)")
 
 python linter test_data/$DIRECTORY/commented.py | tee $LOG && exit 1

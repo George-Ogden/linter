@@ -58,7 +58,7 @@ class FileChecker(cst.CSTTransformer):
         record_violations = self.record_violations
         self.record_violations = False
         try:
-            return node.visit(self)  # type: ignore
+            return node.visit(self)  # type: ignore[return-value]
         finally:
             self.record_violations = record_violations
 
