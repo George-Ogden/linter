@@ -6,7 +6,7 @@ license-files = ["LICENSE"]
 readme = "README.md"
 dynamic = ["version"]
 dependencies = [
-  "libcst>=1.8.4",
+  "libcst>=1.9.0,<2",
   "more-itertools>=8.0.0",
   "typing-extensions>=4.16.0",
 ]
