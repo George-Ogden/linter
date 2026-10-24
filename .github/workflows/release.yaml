@@ -3,7 +3,7 @@ name: Tag New Version and Release
 on:
   push:
     branches:
-      - master
+      - m
   workflow_dispatch:
 
 permissions:

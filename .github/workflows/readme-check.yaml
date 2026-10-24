@@ -3,10 +3,10 @@ name: Check README for Version
 on:
   push:
     branches:
-      - master
+      - m
   pull_request:
     branches:
-      - master
+      - m
 
 jobs:
   check-readme:
