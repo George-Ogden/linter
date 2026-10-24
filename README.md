@@ -4,7 +4,7 @@ Some extra linting rules.
 
 ## Install
 
-This works with Python 3.10-3.14.
+This works with Python 3.10-3.15.
 
 ```bash
 uv pip install git+https://github.com/George-Ogden/linter
