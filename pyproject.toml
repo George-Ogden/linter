@@ -1,12 +1,12 @@
 [project]
 name = "linter"
-requires-python = ">=3.10,<3.15"
+requires-python = ">=3.10,<3.16"
 authors = [{ name = "George Ogden" }]
 license-files = ["LICENSE"]
 readme = "README.md"
 dynamic = ["version"]
 dependencies = [
-  "libcst>=1.8.4",
+  "libcst>=1.9.0,<2",
   "more-itertools>=8.0.0",
   "typing-extensions>=4.16.0",
 ]

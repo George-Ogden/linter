@@ -4,7 +4,7 @@ Some extra linting rules.
 
 ## Install
 
-This works with Python 3.10-3.14.
+This works with Python 3.10-3.15.
 
 ```bash
 uv pip install git+https://github.com/George-Ogden/linter
@@ -38,7 +38,7 @@ This is available as a pre-commit hook!
 
 ```yaml
 - repo: https://github.com/George-Ogden/linter/
-  rev: v2.1.2
+  rev: v2.1.3
   hooks:
     - id: lint
       args: [--fix]
